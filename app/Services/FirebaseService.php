@@ -493,6 +493,10 @@ class FirebaseService
                 throw $exception;
             }
 
+            if (! config('firebase.queue_transient_writes', false)) {
+                throw $exception;
+            }
+
             $this->queuePendingWrite($pendingMutation);
             Log::warning('Firebase write queued locally after a network failure.', [
                 'operation' => $pendingMutation['operation'],

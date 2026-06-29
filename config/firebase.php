@@ -25,10 +25,11 @@ return [
 
     // Fail fast when Google APIs cannot be reached, leaving enough time for
     // the application to serve cached data before PHP's execution limit.
-    'connect_timeout' => (float) env('FIREBASE_CONNECT_TIMEOUT', 8),
-    'request_timeout' => (float) env('FIREBASE_REQUEST_TIMEOUT', 5),
-    'write_timeout' => (float) env('FIREBASE_WRITE_TIMEOUT', 15),
+    'connect_timeout' => (float) env('FIREBASE_CONNECT_TIMEOUT', 15),
+    'request_timeout' => (float) env('FIREBASE_REQUEST_TIMEOUT', 15),
+    'write_timeout' => (float) env('FIREBASE_WRITE_TIMEOUT', 30),
     'circuit_ttl' => (int) env('FIREBASE_CIRCUIT_TTL', 30),
+    'queue_transient_writes' => (bool) env('FIREBASE_QUEUE_TRANSIENT_WRITES', false),
 
     /*
     |--------------------------------------------------------------------------
