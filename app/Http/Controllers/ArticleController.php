@@ -3,18 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Services\FirebaseService;
+use App\Services\MediaStorageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ArticleController extends Controller
 {
     protected FirebaseService $firebase;
 
-    public function __construct(FirebaseService $firebase)
+    protected MediaStorageService $mediaStorage;
+
+    public function __construct(FirebaseService $firebase, MediaStorageService $mediaStorage)
     {
         $this->firebase = $firebase;
+        $this->mediaStorage = $mediaStorage;
     }
 
     /**
@@ -48,11 +51,11 @@ class ArticleController extends Controller
             'thumbnail' => 'nullable|image|max:2048',
         ]);
 
-        $storedPath = null;
+        $storedUpload = null;
 
         try {
             if ($request->hasFile('thumbnail')) {
-                $storedPath = $this->storeThumbnail($request);
+                $storedUpload = $this->storeThumbnail($request);
             }
 
             $data = [
@@ -62,7 +65,7 @@ class ArticleController extends Controller
                 'category' => $validated['category'],
                 'author' => $validated['author'],
                 'published_at' => now()->toIso8601String(),
-                'thumbnail_url' => $storedPath ? '/storage/'.$storedPath : '',
+                'thumbnail_url' => $storedUpload['url'] ?? '',
                 'gallery' => [],
             ];
 
@@ -71,8 +74,8 @@ class ArticleController extends Controller
             return redirect()->route('artikel.index')
                 ->with('success', 'Artikel berhasil ditambahkan');
         } catch (\Throwable $e) {
-            if ($storedPath) {
-                Storage::disk('public')->delete($storedPath);
+            if ($storedUpload) {
+                $this->mediaStorage->deleteByUrl($storedUpload['url'] ?? null);
             }
             report($e);
 
@@ -106,11 +109,11 @@ class ArticleController extends Controller
 
         $article = $this->firebase->getDocument('articles', $id);
         abort_if(! $article, 404);
-        $newThumbnailPath = null;
+        $newThumbnailUpload = null;
 
         try {
             if ($request->hasFile('thumbnail')) {
-                $newThumbnailPath = $this->storeThumbnail($request);
+                $newThumbnailUpload = $this->storeThumbnail($request);
             }
 
             $data = [
@@ -121,21 +124,21 @@ class ArticleController extends Controller
                 'author' => $validated['author'],
             ];
 
-            if ($newThumbnailPath) {
-                $data['thumbnail_url'] = '/storage/'.$newThumbnailPath;
+            if ($newThumbnailUpload) {
+                $data['thumbnail_url'] = $newThumbnailUpload['url'];
             }
 
             $this->firebase->updateDocument('articles', $id, $data);
 
-            if ($newThumbnailPath) {
-                $this->deleteLocalThumbnail($article['thumbnail_url'] ?? null);
+            if ($newThumbnailUpload) {
+                $this->mediaStorage->deleteByUrl($article['thumbnail_url'] ?? null);
             }
 
             return redirect()->route('artikel.index')
                 ->with('success', 'Artikel berhasil diperbarui');
         } catch (\Throwable $e) {
-            if ($newThumbnailPath) {
-                Storage::disk('public')->delete($newThumbnailPath);
+            if ($newThumbnailUpload) {
+                $this->mediaStorage->deleteByUrl($newThumbnailUpload['url'] ?? null);
             }
             report($e);
 
@@ -153,7 +156,7 @@ class ArticleController extends Controller
 
         try {
             $this->firebase->deleteDocument('articles', $id);
-            $this->deleteLocalThumbnail($article['thumbnail_url'] ?? null);
+            $this->mediaStorage->deleteByUrl($article['thumbnail_url'] ?? null);
 
             return redirect()->route('artikel.index')
                 ->with('success', 'Artikel berhasil dihapus');
@@ -164,29 +167,10 @@ class ArticleController extends Controller
         }
     }
 
-    private function storeThumbnail(Request $request): string
+    private function storeThumbnail(Request $request): array
     {
         $file = $request->file('thumbnail');
-        $filename = uniqid('article_', true).'.'.$file->extension();
-        $path = $file->storePubliclyAs('articles', $filename, 'public');
 
-        if (! $path) {
-            throw new \RuntimeException('Thumbnail artikel gagal disimpan.');
-        }
-
-        return $path;
-    }
-
-    private function deleteLocalThumbnail(?string $url): void
-    {
-        if (! $url) {
-            return;
-        }
-
-        $path = rawurldecode((string) parse_url($url, PHP_URL_PATH));
-        $position = strpos($path, '/storage/');
-        if ($position !== false) {
-            Storage::disk('public')->delete(substr($path, $position + strlen('/storage/')));
-        }
+        return $this->mediaStorage->uploadPublicFile($file, 'articles', 'article');
     }
 }

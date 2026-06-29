@@ -3,18 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Services\FirebaseService;
+use App\Services\MediaStorageService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 
 class WorkProgramController extends Controller
 {
     protected FirebaseService $firebase;
 
-    public function __construct(FirebaseService $firebase)
+    protected MediaStorageService $mediaStorage;
+
+    public function __construct(FirebaseService $firebase, MediaStorageService $mediaStorage)
     {
         $this->firebase = $firebase;
+        $this->mediaStorage = $mediaStorage;
     }
 
     /**
@@ -49,11 +52,11 @@ class WorkProgramController extends Controller
             'thumbnail' => 'nullable|image|max:2048',
         ]);
 
-        $storedPath = null;
+        $storedUpload = null;
 
         try {
             if ($request->hasFile('thumbnail')) {
-                $storedPath = $this->storeThumbnail($request);
+                $storedUpload = $this->storeThumbnail($request);
             }
 
             $data = [
@@ -63,7 +66,7 @@ class WorkProgramController extends Controller
                 'start_date' => $validated['start_date'],
                 'end_date' => $validated['end_date'],
                 'status' => $validated['status'],
-                'thumbnail_url' => $storedPath ? '/storage/'.$storedPath : '',
+                'thumbnail_url' => $storedUpload['url'] ?? '',
                 'gallery' => [],
             ];
 
@@ -72,8 +75,8 @@ class WorkProgramController extends Controller
             return redirect()->route('program.index')
                 ->with('success', 'Program kerja berhasil ditambahkan');
         } catch (\Throwable $e) {
-            if ($storedPath) {
-                Storage::disk('public')->delete($storedPath);
+            if ($storedUpload) {
+                $this->mediaStorage->deleteByUrl($storedUpload['url'] ?? null);
             }
             report($e);
             return back()->with('error', 'Gagal menambahkan program: ' . $e->getMessage());
@@ -108,11 +111,11 @@ class WorkProgramController extends Controller
 
         $program = $this->firebase->getDocument('work_programs', $id);
         abort_if(!$program, 404);
-        $newThumbnailPath = null;
+        $newThumbnailUpload = null;
 
         try {
             if ($request->hasFile('thumbnail')) {
-                $newThumbnailPath = $this->storeThumbnail($request);
+                $newThumbnailUpload = $this->storeThumbnail($request);
             }
 
             $data = [
@@ -124,21 +127,21 @@ class WorkProgramController extends Controller
                 'status' => $validated['status'],
             ];
 
-            if ($newThumbnailPath) {
-                $data['thumbnail_url'] = '/storage/'.$newThumbnailPath;
+            if ($newThumbnailUpload) {
+                $data['thumbnail_url'] = $newThumbnailUpload['url'];
             }
 
             $this->firebase->updateDocument('work_programs', $id, $data);
 
-            if ($newThumbnailPath) {
-                $this->deleteLocalThumbnail($program['thumbnail_url'] ?? null);
+            if ($newThumbnailUpload) {
+                $this->mediaStorage->deleteByUrl($program['thumbnail_url'] ?? null);
             }
 
             return redirect()->route('program.index')
                 ->with('success', 'Program berhasil diperbarui');
         } catch (\Throwable $e) {
-            if ($newThumbnailPath) {
-                Storage::disk('public')->delete($newThumbnailPath);
+            if ($newThumbnailUpload) {
+                $this->mediaStorage->deleteByUrl($newThumbnailUpload['url'] ?? null);
             }
             report($e);
             return back()->with('error', 'Gagal memperbarui program: ' . $e->getMessage());
@@ -155,7 +158,7 @@ class WorkProgramController extends Controller
 
         try {
             $this->firebase->deleteDocument('work_programs', $id);
-            $this->deleteLocalThumbnail($program['thumbnail_url'] ?? null);
+            $this->mediaStorage->deleteByUrl($program['thumbnail_url'] ?? null);
 
             return redirect()->route('program.index')
                 ->with('success', 'Program berhasil dihapus');
@@ -165,29 +168,10 @@ class WorkProgramController extends Controller
         }
     }
 
-    private function storeThumbnail(Request $request): string
+    private function storeThumbnail(Request $request): array
     {
         $file = $request->file('thumbnail');
-        $filename = uniqid('program_', true).'.'.$file->extension();
-        $path = $file->storePubliclyAs('programs', $filename, 'public');
 
-        if (!$path) {
-            throw new \RuntimeException('Thumbnail program gagal disimpan.');
-        }
-
-        return $path;
-    }
-
-    private function deleteLocalThumbnail(?string $url): void
-    {
-        if (!$url) {
-            return;
-        }
-
-        $path = rawurldecode((string) parse_url($url, PHP_URL_PATH));
-        $position = strpos($path, '/storage/');
-        if ($position !== false) {
-            Storage::disk('public')->delete(substr($path, $position + strlen('/storage/')));
-        }
+        return $this->mediaStorage->uploadPublicFile($file, 'programs', 'program');
     }
 }

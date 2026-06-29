@@ -3,18 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Services\FirebaseService;
+use App\Services\MediaStorageService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 
 class GroupProfileController extends Controller
 {
     protected FirebaseService $firebase;
 
-    public function __construct(FirebaseService $firebase)
+    protected MediaStorageService $mediaStorage;
+
+    public function __construct(FirebaseService $firebase, MediaStorageService $mediaStorage)
     {
         $this->firebase = $firebase;
+        $this->mediaStorage = $mediaStorage;
     }
 
     /**
@@ -50,11 +53,11 @@ class GroupProfileController extends Controller
             'photo' => 'nullable|image|max:2048',
         ]);
 
-        $storedPath = null;
+        $storedUpload = null;
 
         try {
             if ($request->hasFile('photo')) {
-                $storedPath = $this->storePhoto($request);
+                $storedUpload = $this->storePhoto($request);
             }
 
             $data = [
@@ -62,7 +65,7 @@ class GroupProfileController extends Controller
                 'nim' => $validated['nim'],
                 'prodi' => $validated['prodi'],
                 'position' => $validated['position'],
-                'photo_url' => $storedPath ? '/storage/' . $storedPath : '',
+                'photo_url' => $storedUpload['url'] ?? '',
                 'social_media' => [
                     'email' => $validated['email'] ?? '',
                     'instagram' => $validated['instagram'] ?? '',
@@ -75,8 +78,8 @@ class GroupProfileController extends Controller
             return redirect()->route('group.index')
                 ->with('success', 'Anggota berhasil ditambahkan');
         } catch (\Throwable $e) {
-            if ($storedPath) {
-                Storage::disk('public')->delete($storedPath);
+            if ($storedUpload) {
+                $this->mediaStorage->deleteByUrl($storedUpload['url'] ?? null);
             }
             report($e);
             return back()->with('error', 'Gagal menambahkan anggota: ' . $e->getMessage());
@@ -111,11 +114,11 @@ class GroupProfileController extends Controller
 
         $member = $this->firebase->getDocument('members', $id);
         abort_if(!$member, 404);
-        $newPhotoPath = null;
+        $newPhotoUpload = null;
 
         try {
             if ($request->hasFile('photo')) {
-                $newPhotoPath = $this->storePhoto($request);
+                $newPhotoUpload = $this->storePhoto($request);
             }
 
             $data = [
@@ -129,21 +132,21 @@ class GroupProfileController extends Controller
                 ],
             ];
 
-            if ($newPhotoPath) {
-                $data['photo_url'] = '/storage/' . $newPhotoPath;
+            if ($newPhotoUpload) {
+                $data['photo_url'] = $newPhotoUpload['url'];
             }
 
             $this->firebase->updateDocument('members', $id, $data);
 
-            if ($newPhotoPath) {
-                $this->deleteLocalPhoto($member['photo_url'] ?? null);
+            if ($newPhotoUpload) {
+                $this->mediaStorage->deleteByUrl($member['photo_url'] ?? null);
             }
 
             return redirect()->route('group.index')
                 ->with('success', 'Anggota berhasil diperbarui');
         } catch (\Throwable $e) {
-            if ($newPhotoPath) {
-                Storage::disk('public')->delete($newPhotoPath);
+            if ($newPhotoUpload) {
+                $this->mediaStorage->deleteByUrl($newPhotoUpload['url'] ?? null);
             }
             report($e);
             return back()->with('error', 'Gagal memperbarui anggota: ' . $e->getMessage());
@@ -160,7 +163,7 @@ class GroupProfileController extends Controller
 
         try {
             $this->firebase->deleteDocument('members', $id);
-            $this->deleteLocalPhoto($member['photo_url'] ?? null);
+            $this->mediaStorage->deleteByUrl($member['photo_url'] ?? null);
 
             return redirect()->route('group.index')
                 ->with('success', 'Anggota berhasil dihapus');
@@ -170,29 +173,10 @@ class GroupProfileController extends Controller
         }
     }
 
-    private function storePhoto(Request $request): string
+    private function storePhoto(Request $request): array
     {
         $file = $request->file('photo');
-        $filename = uniqid('member_', true) . '.' . $file->extension();
-        $path = $file->storePubliclyAs('members', $filename, 'public');
 
-        if (!$path) {
-            throw new \RuntimeException('Foto anggota gagal disimpan.');
-        }
-
-        return $path;
-    }
-
-    private function deleteLocalPhoto(?string $url): void
-    {
-        if (!$url) {
-            return;
-        }
-
-        $path = rawurldecode((string) parse_url($url, PHP_URL_PATH));
-        $position = strpos($path, '/storage/');
-        if ($position !== false) {
-            Storage::disk('public')->delete(substr($path, $position + strlen('/storage/')));
-        }
+        return $this->mediaStorage->uploadPublicFile($file, 'members', 'member');
     }
 }
