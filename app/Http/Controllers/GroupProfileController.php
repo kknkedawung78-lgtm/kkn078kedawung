@@ -66,6 +66,7 @@ class GroupProfileController extends Controller
                 'prodi' => $validated['prodi'],
                 'position' => $validated['position'],
                 'photo_url' => $storedUpload['url'] ?? '',
+                'photo_public_id' => $storedUpload['public_id'] ?? '',
                 'social_media' => [
                     'email' => $validated['email'] ?? '',
                     'instagram' => $validated['instagram'] ?? '',
@@ -134,12 +135,16 @@ class GroupProfileController extends Controller
 
             if ($newPhotoUpload) {
                 $data['photo_url'] = $newPhotoUpload['url'];
+                $data['photo_public_id'] = $newPhotoUpload['public_id'];
             }
 
             $this->firebase->updateDocument('members', $id, $data);
 
             if ($newPhotoUpload) {
-                $this->mediaStorage->deleteByUrl($member['photo_url'] ?? null);
+                $this->mediaStorage->deleteUploadedAsset(
+                    $member['photo_public_id'] ?? null,
+                    $member['photo_url'] ?? null
+                );
             }
 
             return redirect()->route('group.index')
@@ -163,7 +168,10 @@ class GroupProfileController extends Controller
 
         try {
             $this->firebase->deleteDocument('members', $id);
-            $this->mediaStorage->deleteByUrl($member['photo_url'] ?? null);
+            $this->mediaStorage->deleteUploadedAsset(
+                $member['photo_public_id'] ?? null,
+                $member['photo_url'] ?? null
+            );
 
             return redirect()->route('group.index')
                 ->with('success', 'Anggota berhasil dihapus');

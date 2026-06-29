@@ -72,6 +72,7 @@ class GalleryController extends Controller
                 'description' => $validated['description'] ?? '',
                 'category' => $validated['category'],
                 'image_url' => $storedUpload['url'],
+                'image_public_id' => $storedUpload['public_id'],
                 'created_at' => now()->toIso8601String(),
             ];
 
@@ -118,13 +119,17 @@ class GalleryController extends Controller
                 $file = $request->file('image');
                 $newUpload = $this->mediaStorage->uploadPublicFile($file, 'galleries', 'gallery');
                 $data['image_url'] = $newUpload['url'];
+                $data['image_public_id'] = $newUpload['public_id'];
             }
 
             $this->firebase->updateDocument('galleries', $id, $data);
 
             if ($newUpload !== null) {
                 try {
-                    $this->mediaStorage->deleteByUrl($gallery['image_url'] ?? null);
+                    $this->mediaStorage->deleteUploadedAsset(
+                        $gallery['image_public_id'] ?? null,
+                        $gallery['image_url'] ?? null
+                    );
                 } catch (\Throwable $cleanupError) {
                     // The Firestore update and new image are already valid.
                     // A failed cleanup must not roll them back.
@@ -154,7 +159,10 @@ class GalleryController extends Controller
         try {
             $gallery = $this->firebase->getDocument('galleries', $id);
             $this->firebase->deleteDocument('galleries', $id);
-            $this->mediaStorage->deleteByUrl($gallery['image_url'] ?? null);
+            $this->mediaStorage->deleteUploadedAsset(
+                $gallery['image_public_id'] ?? null,
+                $gallery['image_url'] ?? null
+            );
 
             return redirect()->route('gallery.index')
                 ->with('success', 'Galeri berhasil dihapus');

@@ -67,6 +67,7 @@ class WorkProgramController extends Controller
                 'end_date' => $validated['end_date'],
                 'status' => $validated['status'],
                 'thumbnail_url' => $storedUpload['url'] ?? '',
+                'thumbnail_public_id' => $storedUpload['public_id'] ?? '',
                 'gallery' => [],
             ];
 
@@ -129,12 +130,16 @@ class WorkProgramController extends Controller
 
             if ($newThumbnailUpload) {
                 $data['thumbnail_url'] = $newThumbnailUpload['url'];
+                $data['thumbnail_public_id'] = $newThumbnailUpload['public_id'];
             }
 
             $this->firebase->updateDocument('work_programs', $id, $data);
 
             if ($newThumbnailUpload) {
-                $this->mediaStorage->deleteByUrl($program['thumbnail_url'] ?? null);
+                $this->mediaStorage->deleteUploadedAsset(
+                    $program['thumbnail_public_id'] ?? null,
+                    $program['thumbnail_url'] ?? null
+                );
             }
 
             return redirect()->route('program.index')
@@ -158,7 +163,10 @@ class WorkProgramController extends Controller
 
         try {
             $this->firebase->deleteDocument('work_programs', $id);
-            $this->mediaStorage->deleteByUrl($program['thumbnail_url'] ?? null);
+            $this->mediaStorage->deleteUploadedAsset(
+                $program['thumbnail_public_id'] ?? null,
+                $program['thumbnail_url'] ?? null
+            );
 
             return redirect()->route('program.index')
                 ->with('success', 'Program berhasil dihapus');

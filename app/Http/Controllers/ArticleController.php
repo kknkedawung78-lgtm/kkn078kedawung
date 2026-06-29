@@ -66,6 +66,7 @@ class ArticleController extends Controller
                 'author' => $validated['author'],
                 'published_at' => now()->toIso8601String(),
                 'thumbnail_url' => $storedUpload['url'] ?? '',
+                'thumbnail_public_id' => $storedUpload['public_id'] ?? '',
                 'gallery' => [],
             ];
 
@@ -126,12 +127,16 @@ class ArticleController extends Controller
 
             if ($newThumbnailUpload) {
                 $data['thumbnail_url'] = $newThumbnailUpload['url'];
+                $data['thumbnail_public_id'] = $newThumbnailUpload['public_id'];
             }
 
             $this->firebase->updateDocument('articles', $id, $data);
 
             if ($newThumbnailUpload) {
-                $this->mediaStorage->deleteByUrl($article['thumbnail_url'] ?? null);
+                $this->mediaStorage->deleteUploadedAsset(
+                    $article['thumbnail_public_id'] ?? null,
+                    $article['thumbnail_url'] ?? null
+                );
             }
 
             return redirect()->route('artikel.index')
@@ -156,7 +161,10 @@ class ArticleController extends Controller
 
         try {
             $this->firebase->deleteDocument('articles', $id);
-            $this->mediaStorage->deleteByUrl($article['thumbnail_url'] ?? null);
+            $this->mediaStorage->deleteUploadedAsset(
+                $article['thumbnail_public_id'] ?? null,
+                $article['thumbnail_url'] ?? null
+            );
 
             return redirect()->route('artikel.index')
                 ->with('success', 'Artikel berhasil dihapus');
