@@ -29,9 +29,15 @@
     <header class="site-header">
         <nav class="navbar navbar-expand-xl" aria-label="Navigasi utama">
             <div class="container">
-                <a class="navbar-brand" href="{{ route('home') }}" aria-label="KKN Karya Nyata - Beranda">
-                    <span class="brand-mark"><i class="fa-solid fa-hand-fist"></i></span>
-                    <span>KKN<span class="brand-dot">.</span>KARYA</span>
+                <a class="navbar-brand" href="{{ route('home') }}" aria-label="KKN 078 Kedawung - Beranda">
+                    <span class="brand-mark">
+                        @if(file_exists(public_path('images/logo-kkn.png')))
+                            <img src="{{ asset('images/logo-kkn.png') }}" alt="Logo KKN 078 Kedawung">
+                        @else
+                            <i class="fa-solid fa-hand-fist" aria-hidden="true"></i>
+                        @endif
+                    </span>
+                    <span>KKN 078 KEDAWUNG</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Buka navigasi">
                     <i class="fa-solid fa-bars"></i>
@@ -73,7 +79,7 @@
         <div class="footer-shape footer-shape-two" aria-hidden="true"></div>
         <div class="container position-relative">
             <div class="footer-lead">
-                <p class="eyebrow light">KKN • KARYA NYATA</p>
+                <p class="eyebrow light">KKN • 078 Desa Kedawung</p>
                 <h2>Bergerak bersama,<br><span>bertumbuh bersama.</span></h2>
                 <a href="{{ route('kontak') }}" class="btn btn-warning btn-lg">Mari Terhubung <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
             </div>
@@ -99,9 +105,9 @@
                 <div class="col-lg-2">
                     <h3>Sosial</h3>
                     <div class="social-links">
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-                        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/kkn.078.kedawung/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@kkn.078.kedawung" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://wa.me/6282323697842" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
             </div>
