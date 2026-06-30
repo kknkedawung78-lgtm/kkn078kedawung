@@ -605,6 +605,102 @@ form:not([style*='display: inline']) .btn[type='submit'] { margin-top: .5rem; }
     .member-info-item { grid-template-columns: 42px minmax(0, 1fr); }
     .member-info-icon { width: 40px; height: 40px; }
 }
+
+/* Homepage card rails on phones */
+@media (max-width: 767.98px) {
+    .program-poster-grid,
+    .story-magazine,
+    .team-hanger-grid {
+        display: grid;
+        grid-template-columns: none;
+        grid-template-rows: 1fr;
+        grid-auto-flow: column;
+        justify-content: start;
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-inline: contain;
+        scroll-padding-inline: .2rem;
+        scroll-snap-type: inline mandatory;
+        scrollbar-width: thin;
+        scrollbar-color: var(--ink) transparent;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .program-poster-grid {
+        grid-auto-columns: min(84vw, 350px);
+        gap: 1.25rem;
+        padding: 1.2rem .45rem 1.4rem;
+    }
+
+    .story-magazine {
+        grid-auto-columns: min(86vw, 380px);
+        gap: 1rem;
+        padding: .8rem .45rem 1.3rem;
+    }
+
+    .team-hanger-grid {
+        grid-auto-columns: min(86vw, 350px);
+        gap: 1.35rem;
+        padding: 0 .45rem 1.3rem;
+    }
+
+    .program-poster,
+    .magazine-story,
+    .team-hanger {
+        min-width: 0;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+
+    .program-poster,
+    .program-poster:nth-child(2),
+    .program-poster:nth-child(3) {
+        grid-column: auto;
+        width: auto;
+        margin-inline: 0;
+    }
+
+    .magazine-story:first-child {
+        grid-row: auto;
+    }
+
+    .magazine-story:first-child .magazine-story-link,
+    .magazine-story:nth-child(2) .magazine-story-link,
+    .magazine-story:nth-child(3) .magazine-story-link {
+        grid-template-columns: 1fr;
+        grid-template-rows: 210px minmax(0, 1fr);
+        transform: none;
+    }
+
+    .magazine-story:nth-child(n+2) .magazine-story-copy {
+        padding: 1rem;
+    }
+
+    .magazine-story:nth-child(n+2) .magazine-story-copy h3 {
+        font-size: 1.2rem;
+    }
+
+    .team-hanger {
+        width: auto;
+    }
+
+    .team-id-badge {
+        width: 100%;
+    }
+
+    .program-poster-grid::-webkit-scrollbar,
+    .story-magazine::-webkit-scrollbar,
+    .team-hanger-grid::-webkit-scrollbar {
+        height: 5px;
+    }
+
+    .program-poster-grid::-webkit-scrollbar-thumb,
+    .story-magazine::-webkit-scrollbar-thumb,
+    .team-hanger-grid::-webkit-scrollbar-thumb {
+        background: var(--ink);
+        border-radius: 999px;
+    }
+}
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     .team-id-badge { animation: none; }
