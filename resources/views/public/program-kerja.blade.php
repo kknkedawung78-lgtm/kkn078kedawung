@@ -16,7 +16,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="btn-group" role="group">
+                <div class="btn-group page-filter-rail" role="group" aria-label="Filter status program">
                     <button type="button" class="btn btn-outline-primary filter-btn active" data-filter="all">Semua</button>
                     <button type="button" class="btn btn-outline-primary filter-btn" data-filter="planned">Direncanakan</button>
                     <button type="button" class="btn btn-outline-primary filter-btn" data-filter="ongoing">Sedang Berjalan</button>
@@ -30,10 +30,10 @@
 <!-- Program List -->
 <section class="py-5">
     <div class="container">
-        <div class="row g-4">
+        <div class="row g-4 page-card-rail program-card-rail">
             @forelse($programs as $program)
             @php($programThumbnail = $program['thumbnail_url'] ?? ($program['gallery'][0] ?? null))
-            <div class="col-md-6 col-lg-4 program-card" data-status="{{ $program['status'] ?? 'planned' }}">
+            <div class="col-md-6 col-lg-4 program-card page-card-item" data-status="{{ $program['status'] ?? 'planned' }}">
                 <div class="card h-100">
                     @if($programThumbnail)
                     <img src="{{ $programThumbnail }}" class="card-img-top" alt="{{ $program['title'] }}" style="height: 200px; object-fit: cover;" loading="lazy" decoding="async">

@@ -118,7 +118,12 @@ main > section:not(.hero) { content-visibility: auto; contain-intrinsic-size: au
 .hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; }
 .hero-art { position: relative; min-height: clamp(390px, 38vw, 500px); }
 .hero-photo-frame { position: absolute; inset: 6% 7% 8% 8%; overflow: hidden; background: #fff; border: var(--line); box-shadow: 12px 12px 0 var(--ink); transform: rotate(3deg); }
-.hero-photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+.hero-photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+}
 .hero-photo-placeholder { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; flex-direction: column; gap: .65rem; background: var(--sky); font-size: clamp(4rem, 9vw, 8rem); }
 .hero-photo-placeholder span { padding: .25rem .65rem; background: #fff; border: 2px solid var(--ink); font-size: .78rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .hero-sticker { position: absolute; z-index: 2; display: grid; place-items: center; width: 112px; aspect-ratio: 1; padding: .8rem; background: var(--pink); border: var(--line); border-radius: 50%; box-shadow: var(--shadow-sm); font-family: 'Arial Black', Impact, sans-serif; font-size: .9rem; line-height: 1.05; text-align: center; text-transform: uppercase; transform: rotate(-12deg); }
@@ -540,6 +545,56 @@ form:not([style*='display: inline']) .btn[type='submit'] { margin-top: .5rem; }
     .admin-quick-strip > *:last-child { border-bottom: 0; }
     .card, .card:hover { transform: none; box-shadow: 5px 5px 0 var(--ink); }
     .reveal { opacity: 1; transform: none; transition: none; }
+
+    /* Listing pages: keep cards compact and swipeable instead of stacking them. */
+    .page-filter-rail {
+        overflow-x: auto;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+        margin-inline: -.25rem;
+        padding: .35rem .25rem .7rem;
+        scroll-snap-type: inline proximity;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .page-filter-rail::-webkit-scrollbar { display: none; }
+    .page-filter-rail > .btn {
+        width: auto;
+        min-width: max-content !important;
+        flex: 0 0 auto;
+        white-space: nowrap;
+        scroll-snap-align: start;
+    }
+    .page-card-rail {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: flex-start !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+        margin-inline: calc(-.5 * var(--bs-gutter-x));
+        padding: .35rem calc(.5 * var(--bs-gutter-x)) 1.25rem;
+        scroll-padding-inline: calc(.5 * var(--bs-gutter-x));
+        scroll-snap-type: inline mandatory;
+        scrollbar-color: var(--ink) transparent;
+        scrollbar-width: thin;
+        overscroll-behavior-inline: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+    .page-card-rail > .page-card-item {
+        width: min(84vw, 340px);
+        max-width: none;
+        flex: 0 0 min(84vw, 340px);
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+    .organization-card-rail > .page-card-item {
+        width: min(76vw, 290px);
+        flex-basis: min(76vw, 290px);
+    }
+    .gallery-card-media { height: clamp(220px, 68vw, 290px) !important; }
+    .program-card-rail .card-img-top,
+    .member-card-rail .card-img-top { height: clamp(200px, 62vw, 250px) !important; }
+    .page-card-rail .card { height: 100%; }
 }
 @media (max-width: 575.98px) {
     .container { --bs-gutter-x: 1.25rem; }

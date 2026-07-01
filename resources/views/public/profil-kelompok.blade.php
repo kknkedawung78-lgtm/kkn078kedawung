@@ -71,9 +71,9 @@
 <section class="py-5">
     <div class="container">
         <h2 class="text-center mb-5">Struktur Organisasi Kelompok</h2>
-        <div class="row g-4 justify-content-center">
+        <div class="row g-4 justify-content-center page-card-rail organization-card-rail">
             <!-- Ketua -->
-            <div class="col-md-6 col-lg-3 text-center">
+            <div class="col-md-6 col-lg-3 text-center page-card-item">
                 <div class="card border-primary h-100">
                     <div class="card-header bg-primary text-white">
                         <h6 class="mb-0">Ketua Kelompok</h6>
@@ -88,7 +88,7 @@
             </div>
 
             <!-- Vice Ketua -->
-            <div class="col-md-6 col-lg-3 text-center">
+            <div class="col-md-6 col-lg-3 text-center page-card-item">
                 <div class="card border-secondary h-100">
                     <div class="card-header bg-secondary text-white">
                         <h6 class="mb-0">Wakil Ketua</h6>
@@ -103,7 +103,7 @@
             </div>
 
             <!-- Sekretaris -->
-            <div class="col-md-6 col-lg-3 text-center">
+            <div class="col-md-6 col-lg-3 text-center page-card-item">
                 <div class="card border-info h-100">
                     <div class="card-header bg-info text-white">
                         <h6 class="mb-0">Sekretaris</h6>
@@ -118,7 +118,7 @@
             </div>
 
             <!-- Bendahara -->
-            <div class="col-md-6 col-lg-3 text-center">
+            <div class="col-md-6 col-lg-3 text-center page-card-item">
                 <div class="card border-success h-100">
                     <div class="card-header bg-success text-white">
                         <h6 class="mb-0">Bendahara</h6>
@@ -139,9 +139,9 @@
 <section class="py-5 bg-light">
     <div class="container">
         <h2 class="text-center mb-5">Daftar Anggota Kelompok</h2>
-        <div class="row g-4">
+        <div class="row g-4 page-card-rail member-card-rail">
             @forelse($members as $member)
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-4 page-card-item">
                 <div class="card h-100 text-center member-preview-card">
                     <a href="{{ route('profil-kelompok.detail', $member['id']) }}" class="member-card-main" aria-label="Lihat profil {{ $member['name'] ?? 'anggota' }}">
                     @if($member['photo_url'] ?? false)

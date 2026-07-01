@@ -14,7 +14,7 @@
 <!-- Filter Section -->
 <section class="py-4 bg-light">
     <div class="container">
-        <div class="d-flex flex-wrap gap-2 justify-content-center">
+        <div class="d-flex gap-2 justify-content-md-center page-filter-rail" aria-label="Filter galeri">
             <button class="btn btn-outline-primary filter-btn active" data-filter="all">Semua</button>
             <button class="btn btn-outline-primary filter-btn" data-filter="edukasi">Edukasi</button>
             <button class="btn btn-outline-primary filter-btn" data-filter="sosialisasi">Sosialisasi</button>
@@ -28,10 +28,10 @@
 <!-- Gallery Grid -->
 <section class="py-5">
     <div class="container">
-        <div class="row g-3" id="gallery-grid">
+        <div class="row g-3 page-card-rail gallery-card-rail" id="gallery-grid">
             @forelse($galleries as $gallery)
-            <div class="col-md-6 col-lg-4 gallery-item" data-category="{{ $gallery['category'] ?? 'dokumentasi' }}">
-                <div class="position-relative overflow-hidden rounded-3" style="height: 300px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#galleryModal{{ $loop->index }}">
+            <div class="col-md-6 col-lg-4 gallery-item page-card-item" data-category="{{ $gallery['category'] ?? 'dokumentasi' }}">
+                <div class="position-relative overflow-hidden rounded-3 gallery-card-media" style="height: 300px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#galleryModal{{ $loop->index }}">
                     @if($gallery['image_url'] ?? false)
                     <img src="{{ $gallery['image_url'] }}" alt="{{ $gallery['title'] }}" class="img-fluid w-100 h-100" style="object-fit: cover;" loading="lazy" decoding="async">
                     @else
