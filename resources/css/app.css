@@ -241,6 +241,20 @@ img.shadow, .ratio.shadow, .img-fluid.rounded, .img-fluid.rounded-3 { border: va
 hr { border-top: var(--line); opacity: 1; }
 .article-content { padding: clamp(1.25rem, 4vw, 2.5rem); background: #fff; border: var(--line); box-shadow: var(--shadow); font-size: 1.08rem; }
 .article-content p { white-space: pre-line; }
+.story-list-card { min-width: 0; }
+.story-list-main { flex: 1; }
+.story-list-media img, .story-list-placeholder { width: 100%; height: 200px; }
+.story-list-media img { object-fit: cover; }
+.story-list-copy { min-width: 0; }
+.story-detail-main, .story-detail-sidebar { min-width: 0; }
+.story-detail-cover { display: block; width: 100%; max-height: 560px; object-fit: cover; }
+.story-detail-meta { display: flex; flex-wrap: wrap; gap: .55rem; }
+.story-detail-meta .badge { max-width: 100%; margin-left: 0 !important; overflow-wrap: anywhere; white-space: normal; text-align: left; }
+.story-info-card { top: 100px; }
+.story-gallery-image { display: block; width: 100%; height: 250px; object-fit: cover; }
+.article-content, .article-content * { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.article-content img, .article-content video, .article-content iframe { height: auto; }
+.article-content pre, .article-content table { display: block; max-width: 100%; overflow-x: auto; }
 
 /* Homepage team as hanging identity badges */
 .home-team { position: relative; overflow: hidden; background-color: var(--sky); background-image: radial-gradient(#17171722 1.4px, transparent 1.4px); background-size: 22px 22px; border-block: var(--line); }
@@ -595,6 +609,11 @@ form:not([style*='display: inline']) .btn[type='submit'] { margin-top: .5rem; }
     .program-card-rail .card-img-top,
     .member-card-rail .card-img-top { height: clamp(200px, 62vw, 250px) !important; }
     .page-card-rail .card { height: 100%; }
+    .story-list-page .artikel-item { width: 100%; }
+    .story-list-card .card-footer .btn { width: 100%; }
+    .story-detail-sidebar { margin-top: .5rem; }
+    .story-info-card { top: auto; }
+    .story-share-actions > * { flex: 1 1 44px; }
 }
 @media (max-width: 575.98px) {
     .container { --bs-gutter-x: 1.25rem; }
@@ -660,6 +679,12 @@ form:not([style*='display: inline']) .btn[type='submit'] { margin-top: .5rem; }
     .id-photo-wrap { height: 165px; }
     .member-info-item { grid-template-columns: 42px minmax(0, 1fr); }
     .member-info-icon { width: 40px; height: 40px; }
+    .story-filters .row { --bs-gutter-y: .75rem; }
+    .story-list-media img, .story-list-placeholder { height: clamp(190px, 58vw, 240px); }
+    .story-list-card .card-footer { padding: .85rem 1.1rem 1.1rem; }
+    .story-detail-page .article-content { margin-inline: 0; padding: 1.1rem; font-size: 1rem; line-height: 1.7; box-shadow: 4px 4px 0 var(--ink); }
+    .story-gallery-image { height: clamp(210px, 68vw, 280px); }
+    .story-detail-sidebar .card-body { padding: 1rem; }
 }
 
 /* Homepage card rails on phones */

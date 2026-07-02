@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="hero">
+<section class="hero story-detail-hero">
     <div class="container">
         <h1>{{ $article['title'] ?? 'Artikel' }}</h1>
         <p class="lead">
@@ -15,15 +15,15 @@
 </section>
 
 <!-- Content -->
-<section class="py-5">
+<section class="py-5 story-detail-page">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
+        <div class="row g-4 g-xl-5">
+            <div class="col-lg-8 story-detail-main">
                 @if($article['thumbnail_url'] ?? false)
-                <img src="{{ $article['thumbnail_url'] }}" alt="{{ $article['title'] }}" class="img-fluid rounded-3 mb-4 shadow" decoding="async">
+                <img src="{{ $article['thumbnail_url'] }}" alt="{{ $article['title'] }}" class="story-detail-cover rounded-3 mb-4 shadow" decoding="async">
                 @endif
 
-                <div class="mb-4">
+                <div class="story-detail-meta mb-4">
                     <span class="badge bg-primary">{{ $article['category'] ?? 'Umum' }}</span>
                     <span class="badge bg-secondary ms-2">
                         <i class="fas fa-user"></i> {{ $article['author'] ?? 'Penulis' }}
@@ -34,21 +34,21 @@
                     <p class="text-justify">{{ $article['content'] ?? 'Konten tidak tersedia' }}</p>
                 </div>
 
-                @if($article['gallery'] && count($article['gallery']) > 0)
+                @if(!empty($article['gallery']))
                 <hr class="my-5">
                 <h4>Galeri Kegiatan</h4>
                 <div class="row g-3 mb-5">
                     @foreach($article['gallery'] as $image)
                     <div class="col-md-6">
-                        <img src="{{ $image }}" alt="Dokumentasi" class="img-fluid rounded" style="height: 250px; object-fit: cover;" loading="lazy" decoding="async">
+                        <img src="{{ $image }}" alt="Dokumentasi" class="story-gallery-image rounded" loading="lazy" decoding="async">
                     </div>
                     @endforeach
                 </div>
                 @endif
             </div>
 
-            <div class="col-lg-4">
-                <div class="card mb-4 sticky-top" style="top: 100px;">
+            <div class="col-lg-4 story-detail-sidebar">
+                <div class="card mb-4 story-info-card sticky-lg-top">
                     <div class="card-header bg-primary text-white">
                         <h5 class="mb-0">Informasi Artikel</h5>
                     </div>
@@ -87,7 +87,7 @@
                         <h5 class="mb-0">Bagikan Artikel</h5>
                     </div>
                     <div class="card-body">
-                        <div class="d-flex gap-2">
+                        <div class="story-share-actions d-flex flex-wrap gap-2">
                             <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-sm btn-outline-primary">
                                 <i class="fab fa-facebook"></i>
                             </a>

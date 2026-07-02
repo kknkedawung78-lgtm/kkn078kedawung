@@ -12,7 +12,7 @@
 </section>
 
 <!-- Search & Filter -->
-<section class="py-4 bg-light">
+<section class="py-4 bg-light story-filters">
     <div class="container">
         <div class="row g-3">
             <div class="col-md-6">
@@ -33,23 +33,23 @@
 </section>
 
 <!-- Artikel List -->
-<section class="py-5">
+<section class="py-5 story-list-page">
     <div class="container">
         <div class="row g-4">
             @forelse($articles as $article)
             <div class="col-lg-6 artikel-item" data-kategori="{{ $article['category'] ?? '' }}" data-title="{{ strtolower($article['title'] ?? '') }}">
-                <div class="card h-100">
-                    <div class="row g-0">
-                        <div class="col-md-4">
+                <div class="card h-100 story-list-card">
+                    <div class="row g-0 story-list-main">
+                        <div class="col-md-4 story-list-media">
                             @if($article['thumbnail_url'] ?? false)
-                            <img src="{{ $article['thumbnail_url'] }}" class="img-fluid" alt="{{ $article['title'] }}" style="height: 200px; object-fit: cover;" loading="lazy" decoding="async">
+                            <img src="{{ $article['thumbnail_url'] }}" alt="{{ $article['title'] }}" loading="lazy" decoding="async">
                             @else
-                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <div class="story-list-placeholder bg-light d-flex align-items-center justify-content-center">
                                 <i class="fas fa-newspaper text-muted" style="font-size: 2rem;"></i>
                             </div>
                             @endif
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-8 story-list-copy">
                             <div class="card-body">
                                 <h5 class="card-title">{{ $article['title'] ?? 'Artikel' }}</h5>
                                 <p class="card-text text-muted small mb-2">
