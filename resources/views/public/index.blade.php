@@ -88,7 +88,7 @@
             @endif
         </div>
 
-        <div class="text-center mt-4">
+        <div class="text-center mt-4 gallery-full-link">
             <a href="{{ route('galeri') }}" class="btn btn-light">Buka Galeri Lengkap <i class="fa-solid fa-arrow-right"></i></a>
         </div>
     </div>

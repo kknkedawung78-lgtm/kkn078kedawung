@@ -531,6 +531,7 @@ form:not([style*='display: inline']) .btn[type='submit'] { margin-top: .5rem; }
     .coverflow-prev { left: calc(50% - 58px); }
     .coverflow-next { right: calc(50% - 58px); }
     .coverflow-dots { margin-top: 3.2rem; }
+    .gallery-full-link { margin-top: 4.75rem !important; }
     section.py-5 { padding-top: 4rem !important; padding-bottom: 4rem !important; }
     .section-heading { align-items: start; flex-direction: column; gap: .85rem; margin-bottom: 2rem; }
     .program-poster-grid { grid-template-columns: 1fr; padding-inline: .2rem; }
@@ -662,6 +663,7 @@ form:not([style*='display: inline']) .btn[type='submit'] { margin-top: .5rem; }
     .coverflow-card { width: calc(100vw - 3rem); height: 270px; }
     .coverflow-caption { padding: 3rem 1rem 1rem; }
     .coverflow-control { bottom: -2.25rem; }
+    .gallery-full-link { margin-top: 4.5rem !important; }
     section.py-5 { padding-top: 3.25rem !important; padding-bottom: 3.25rem !important; }
     section h2 { font-size: clamp(1.9rem, 10vw, 2.7rem); }
     section h3 { font-size: clamp(1.35rem, 8vw, 2rem); }

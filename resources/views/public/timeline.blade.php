@@ -12,7 +12,7 @@
 </section>
 
 <!-- Timeline -->
-<section class="py-5">
+<section class="py-5 timeline-page">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 mx-auto">
@@ -77,26 +77,23 @@
 }
 
 .timeline-item {
-    margin-bottom: 3rem;
     position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 70px minmax(0, 1fr);
+    align-items: start;
+    margin-bottom: 3rem;
 }
 
-.timeline-left {
-    margin-left: 0;
-    text-align: right;
-}
-
-.timeline-right {
-    margin-left: auto;
-    text-align: left;
-}
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-left { text-align: right; }
+.timeline-right { text-align: left; }
 
 .timeline-marker {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 0;
+    position: relative;
     z-index: 10;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
 }
 
 .marker {
@@ -113,42 +110,83 @@
 }
 
 .timeline-left .timeline-content {
-    margin-right: 5%;
-    width: 45%;
+    grid-column: 1;
+    grid-row: 1;
 }
 
 .timeline-right .timeline-content {
-    margin-left: 5%;
-    width: 45%;
+    grid-column: 3;
+    grid-row: 1;
 }
 
-@media (max-width: 768px) {
+.timeline-content,
+.timeline-content .card {
+    min-width: 0;
+}
+
+.timeline-content h5,
+.timeline-content p,
+.timeline-content small {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 767.98px) {
+    .timeline {
+        padding: .75rem 0;
+    }
+
     .timeline::before {
-        left: 0;
-        transform: translateX(-2px);
+        left: 22px;
+        transform: translateX(-50%);
     }
 
     .timeline-item {
-        margin-left: 0;
+        grid-template-columns: 48px minmax(0, 1fr);
+        column-gap: .75rem;
+        margin-bottom: 2rem;
         text-align: left;
     }
 
     .timeline-left,
     .timeline-right {
-        margin-left: 0;
         text-align: left;
     }
 
     .timeline-marker {
-        left: 0;
-        transform: none;
+        grid-column: 1;
+        justify-self: start;
+    }
+
+    .marker {
+        width: 44px;
+        height: 44px;
+        border-width: 3px;
     }
 
     .timeline-left .timeline-content,
     .timeline-right .timeline-content {
-        margin-left: 70px;
-        margin-right: 0;
-        width: calc(100% - 70px);
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .timeline-content .card-header,
+    .timeline-content .card-body {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 359.98px) {
+    .timeline-item {
+        grid-template-columns: 40px minmax(0, 1fr);
+        column-gap: .6rem;
+    }
+
+    .timeline::before { left: 18px; }
+    .marker { width: 38px; height: 38px; font-size: .8rem; }
+
+    .timeline-content .card-header,
+    .timeline-content .card-body {
+        padding: .8rem;
     }
 }
 </style>
