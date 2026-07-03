@@ -12,8 +12,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @yield('styles')
 </head>
-<body>
+<body class="is-page-loading">
     <a class="skip-link" href="#main-content">Lewati ke konten</a>
+    <x-page-skeleton />
 
     <div class="top-ticker" aria-label="Informasi singkat">
         <div class="ticker-track">

@@ -12,8 +12,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @yield('styles')
 </head>
-<body class="admin-shell bg-light">
+<body class="admin-shell bg-light is-page-loading">
     <a class="skip-link" href="#admin-content">Lewati ke konten</a>
+    <x-page-skeleton :admin="true" />
 
     <header>
         <nav class="navbar navbar-expand-xl navbar-light bg-white border-bottom sticky-top shadow-sm" aria-label="Navigasi admin">

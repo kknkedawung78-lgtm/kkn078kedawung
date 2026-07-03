@@ -44,6 +44,53 @@ main > section:not(.hero) { content-visibility: auto; contain-intrinsic-size: au
 }
 .skip-link:focus { top: 1rem; }
 
+/* Full-page skeleton for initial loads and page transitions. */
+.is-page-loading { overflow: hidden; }
+.page-skeleton { position: fixed; z-index: 9998; inset: 0; overflow: hidden auto; visibility: hidden; opacity: 0; background: var(--paper); pointer-events: none; transition: opacity .18s ease, visibility 0s linear .18s; }
+.is-page-loading .page-skeleton { visibility: visible; opacity: 1; pointer-events: auto; transition: none; }
+.page-skeleton--admin { background: #fff5d4; }
+.page-skeleton__topbar { height: 38px; background: var(--yellow); border-bottom: var(--line); }
+.page-skeleton--admin .page-skeleton__topbar { height: 8px; background: var(--ink); }
+.page-skeleton__nav { min-height: 82px; display: flex; align-items: center; background: #fff; border-bottom: var(--line); }
+.page-skeleton__nav-inner { display: flex; align-items: center; gap: .7rem; }
+.page-skeleton__links { display: flex; align-items: center; gap: 1rem; margin-left: auto; }
+.page-skeleton__links .skeleton-block { width: 68px; height: 18px; }
+.skeleton-block { display: block; overflow: hidden; position: relative; background: #dedbd2; border-radius: 5px; }
+.skeleton-block::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 20%, rgba(255,255,255,.78) 45%, transparent 70%); transform: translateX(-100%); animation: skeleton-shimmer 1.35s infinite; }
+@keyframes skeleton-shimmer { to { transform: translateX(100%); } }
+.skeleton-logo { width: 43px; height: 43px; flex: 0 0 auto; border: 2px solid var(--ink); border-radius: 50%; }
+.skeleton-brand { width: 180px; height: 23px; }
+.page-skeleton__links .skeleton-button { width: 92px; height: 38px; border: 2px solid var(--ink); }
+.page-skeleton__content { padding-top: clamp(2.5rem, 6vw, 5rem); padding-bottom: 4rem; }
+.page-skeleton__hero { display: grid; grid-template-columns: 1.15fr .85fr; align-items: center; gap: clamp(2rem, 6vw, 5rem); }
+.page-skeleton__copy { display: flex; flex-direction: column; gap: .9rem; }
+.skeleton-kicker { width: 150px; height: 25px; }
+.skeleton-title { width: 92%; height: clamp(48px, 7vw, 82px); }
+.skeleton-title--short { width: 64%; }
+.skeleton-text { width: 88%; height: 18px; margin-top: .4rem; }
+.skeleton-text--short { width: 58%; margin-top: 0; }
+.page-skeleton__visual { width: 100%; min-height: 310px; border: var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.page-skeleton__section { padding-top: clamp(3rem, 7vw, 5rem); }
+.skeleton-heading { width: min(360px, 70%); height: 42px; margin-bottom: 1.6rem; }
+.page-skeleton__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+.page-skeleton__card { overflow: hidden; background: #fff; border: var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+.skeleton-card-image { width: 100%; height: 150px; border-radius: 0; }
+.page-skeleton__card-body { display: flex; flex-direction: column; gap: .75rem; padding: 1.2rem; }
+.skeleton-card-title { width: 72%; height: 24px; }
+.skeleton-card-line { width: 100%; height: 14px; }
+.skeleton-card-line--short { width: 62%; }
+
+@media (max-width: 767.98px) {
+    .page-skeleton__topbar { height: 34px; }
+    .page-skeleton__nav { min-height: 70px; }
+    .page-skeleton__links .skeleton-block:not(.skeleton-button) { display: none; }
+    .skeleton-brand { width: 130px; }
+    .page-skeleton__hero { grid-template-columns: 1fr; gap: 2rem; }
+    .page-skeleton__visual { min-height: 220px; }
+    .page-skeleton__grid { display: flex; overflow: hidden; }
+    .page-skeleton__card { min-width: min(80vw, 320px); }
+}
+
 /* Ticker + navigation */
 .top-ticker { overflow: hidden; background: var(--yellow); border-bottom: var(--line); height: 38px; }
 .ticker-track { display: flex; width: max-content; align-items: center; gap: 1.1rem; padding: .35rem 0; font-size: .78rem; font-weight: 900; letter-spacing: .1em; animation: ticker-slide 32s linear infinite; will-change: transform; }
