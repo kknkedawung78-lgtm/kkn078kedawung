@@ -136,25 +136,22 @@
     }
 
     .timeline::before {
-        left: 22px;
+        left: 50%;
         transform: translateX(-50%);
     }
 
     .timeline-item {
-        grid-template-columns: 48px minmax(0, 1fr);
-        column-gap: .75rem;
+        grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr);
+        column-gap: .35rem;
         margin-bottom: 2rem;
-        text-align: left;
     }
 
-    .timeline-left,
-    .timeline-right {
-        text-align: left;
-    }
+    .timeline-left { text-align: right; }
+    .timeline-right { text-align: left; }
 
     .timeline-marker {
-        grid-column: 1;
-        justify-self: start;
+        grid-column: 2;
+        justify-self: center;
     }
 
     .marker {
@@ -165,23 +162,29 @@
 
     .timeline-left .timeline-content,
     .timeline-right .timeline-content {
-        grid-column: 2;
         grid-row: 1;
     }
 
+    .timeline-left .timeline-content { grid-column: 1; }
+    .timeline-right .timeline-content { grid-column: 3; }
+
     .timeline-content .card-header,
     .timeline-content .card-body {
-        padding: 1rem;
+        padding: .8rem;
     }
+
+    .timeline-content h5 { font-size: .95rem; }
+    .timeline-content p { font-size: .82rem; line-height: 1.45; }
+    .timeline-content small { font-size: .7rem; }
 }
 
 @media (max-width: 359.98px) {
     .timeline-item {
-        grid-template-columns: 40px minmax(0, 1fr);
-        column-gap: .6rem;
+        grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr);
+        column-gap: .25rem;
     }
 
-    .timeline::before { left: 18px; }
+    .timeline::before { left: 50%; }
     .marker { width: 38px; height: 38px; font-size: .8rem; }
 
     .timeline-content .card-header,
