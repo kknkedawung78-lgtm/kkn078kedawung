@@ -72,65 +72,34 @@
     <div class="container">
         <h2 class="text-center mb-5">Struktur Organisasi Kelompok</h2>
         <div class="row g-4 justify-content-center page-card-rail organization-card-rail">
-            <!-- Ketua -->
+            @foreach($organization as $position => $positionMembers)
             <div class="col-md-6 col-lg-3 text-center page-card-item">
-                <div class="card border-primary h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h6 class="mb-0">Ketua Kelompok</h6>
+                <div class="card organization-card h-100">
+                    <div class="card-header organization-card-header">
+                        <h6 class="mb-0">{{ $position }}</h6>
                     </div>
-                    <div class="card-body">
-                        <div class="mb-3" style="height: 150px; background: #f0f0f0; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-user text-muted" style="font-size: 3rem;"></i>
-                        </div>
-                        <p class="fw-bold">-</p>
+                    <div class="card-body organization-card-body">
+                        @forelse($positionMembers as $organizationMember)
+                            <a href="{{ route('profil-kelompok.detail', $organizationMember['id']) }}" class="organization-member">
+                                <div class="organization-photo">
+                                    @if($organizationMember['photo_url'] ?? false)
+                                        <img src="{{ $organizationMember['photo_url'] }}" alt="Foto {{ $organizationMember['name'] ?? 'anggota' }}" loading="lazy" decoding="async">
+                                    @else
+                                        <i class="fas fa-user text-muted"></i>
+                                    @endif
+                                </div>
+                                <p class="fw-bold mb-0">{{ $organizationMember['name'] ?? 'Anggota' }}</p>
+                            </a>
+                        @empty
+                            <div class="organization-photo organization-photo-empty">
+                                <i class="fas fa-user text-muted"></i>
+                            </div>
+                            <p class="fw-bold mb-0">-</p>
+                        @endforelse
                     </div>
                 </div>
             </div>
-
-            <!-- Vice Ketua -->
-            <div class="col-md-6 col-lg-3 text-center page-card-item">
-                <div class="card border-secondary h-100">
-                    <div class="card-header bg-secondary text-white">
-                        <h6 class="mb-0">Wakil Ketua</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3" style="height: 150px; background: #f0f0f0; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-user text-muted" style="font-size: 3rem;"></i>
-                        </div>
-                        <p class="fw-bold">-</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sekretaris -->
-            <div class="col-md-6 col-lg-3 text-center page-card-item">
-                <div class="card border-info h-100">
-                    <div class="card-header bg-info text-white">
-                        <h6 class="mb-0">Sekretaris</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3" style="height: 150px; background: #f0f0f0; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-user text-muted" style="font-size: 3rem;"></i>
-                        </div>
-                        <p class="fw-bold">-</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bendahara -->
-            <div class="col-md-6 col-lg-3 text-center page-card-item">
-                <div class="card border-success h-100">
-                    <div class="card-header bg-success text-white">
-                        <h6 class="mb-0">Bendahara</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3" style="height: 150px; background: #f0f0f0; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-user text-muted" style="font-size: 3rem;"></i>
-                        </div>
-                        <p class="fw-bold">-</p>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </section>
@@ -145,7 +114,7 @@
                 <div class="card h-100 text-center member-preview-card">
                     <a href="{{ route('profil-kelompok.detail', $member['id']) }}" class="member-card-main" aria-label="Lihat profil {{ $member['name'] ?? 'anggota' }}">
                     @if($member['photo_url'] ?? false)
-                    <img src="{{ $member['photo_url'] }}" class="card-img-top" alt="{{ $member['name'] }}" style="height: 250px; object-fit: cover;" loading="lazy" decoding="async">
+                    <img src="{{ $member['photo_url'] }}" class="card-img-top member-list-photo" alt="{{ $member['name'] }}" loading="lazy" decoding="async">
                     @else
                     <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
                         <i class="fas fa-user text-muted" style="font-size: 4rem;"></i>

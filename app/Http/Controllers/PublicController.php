@@ -55,10 +55,27 @@ class PublicController extends Controller
         $members = $this->firebase->getCollection('members');
         $lecturer = $this->firebase->getDocument('lecturers', 'main');
 
+        $organization = collect([
+            'KORDES',
+            'SEKRETARIS',
+            'BENDAHARA',
+            'HUMAS',
+            'ACARA',
+            'LOGISTIK',
+            'PDD',
+        ])->mapWithKeys(function (string $position) use ($members): array {
+            $positionMembers = collect($members)->filter(function (array $member) use ($position): bool {
+                return mb_strtoupper(trim((string) ($member['position'] ?? ''))) === $position;
+            })->values()->all();
+
+            return [$position => $positionMembers];
+        })->all();
+
         return view('public.profil-kelompok', [
             'group' => $groupProfile,
             'members' => $members,
             'lecturer' => $lecturer,
+            'organization' => $organization,
         ]);
     }
 

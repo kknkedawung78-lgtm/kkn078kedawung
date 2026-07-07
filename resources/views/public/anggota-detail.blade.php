@@ -146,46 +146,97 @@
 (() => {
     const scene = document.querySelector('[data-id-scene]');
     const card = scene?.querySelector('[data-id-card]');
+    const stack = scene?.querySelector('.member-id-stack');
     const layers = scene ? [...scene.querySelectorAll('[data-id-layer]')] : [];
     const canTilt = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!scene || !card || !canTilt) return;
+    if (!scene || !card || !stack || !canTilt) return;
 
-    let frame = null;
-    let pointerX = 0;
-    let pointerY = 0;
-    let touching = false;
+    let frame = null, dragging = false, pointerId = null;
+    let x = 0, y = 0, angle = 0, vx = 0, vy = 0, angularVelocity = 0;
+    let tiltX = 0, tiltY = 0, lastX = 0, lastY = 0, lastTime = 0, previousFrame = 0;
+
+    stack.classList.add('is-physics-ready');
 
     const paint = () => {
-        card.style.transform = `rotateX(${pointerY * -7}deg) rotateY(${pointerX * 10}deg) translate3d(${pointerX * 5}px, ${pointerY * 4}px, 28px)`;
-        layers[0]?.style.setProperty('transform', `translate3d(${pointerX * -14}px, ${pointerY * -10}px, -35px) rotate(-6deg)`);
-        layers[1]?.style.setProperty('transform', `translate3d(${pointerX * 12}px, ${pointerY * 9}px, -18px) rotate(5deg)`);
-        frame = null;
+        stack.style.transform = `translate3d(calc(-50% + ${x}px), ${y}px, 0) rotate(${angle}deg)`;
+        card.style.transform = `rotateX(${-tiltY * 13}deg) rotateY(${tiltX * 17}deg) translateZ(32px)`;
+        layers[0]?.style.setProperty('transform', `translate3d(${-14 - tiltX * 18}px, ${9 - tiltY * 12}px, -35px) rotate(${-6 - angle * .08}deg)`);
+        layers[1]?.style.setProperty('transform', `translate3d(${15 + tiltX * 15}px, ${8 + tiltY * 10}px, -18px) rotate(${5 + angle * .08}deg)`);
     };
 
     scene.addEventListener('pointerdown', (event) => {
-        touching = event.pointerType !== 'mouse';
-        if (touching) scene.setPointerCapture(event.pointerId);
+        if (event.target.closest('a')) return;
+        dragging = true;
+        pointerId = event.pointerId;
+        lastX = event.clientX;
+        lastY = event.clientY;
+        lastTime = performance.now();
+        vx = vy = angularVelocity = 0;
+        stack.classList.add('is-dragging');
+        scene.setPointerCapture(event.pointerId);
+        event.preventDefault();
     });
 
     scene.addEventListener('pointermove', (event) => {
-        if (event.pointerType !== 'mouse' && !touching) return;
         const bounds = scene.getBoundingClientRect();
-        pointerX = ((event.clientX - bounds.left) / bounds.width - .5) * 2;
-        pointerY = ((event.clientY - bounds.top) / bounds.height - .5) * 2;
-        if (!frame) frame = requestAnimationFrame(paint);
+        tiltX = Math.max(-1, Math.min(1, ((event.clientX - bounds.left) / bounds.width - .5) * 2));
+        tiltY = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height - .5) * 2));
+
+        if (dragging && event.pointerId === pointerId) {
+            const now = performance.now();
+            const dt = Math.max(8, now - lastTime) / 1000;
+            const dx = event.clientX - lastX;
+            const dy = event.clientY - lastY;
+            x = Math.max(-210, Math.min(210, x + dx * 1.18));
+            y = Math.max(-145, Math.min(145, y + dy * 1.12));
+            angle = Math.max(-34, Math.min(34, x * .105 + dx * .42));
+            vx = dx / dt * 1.35;
+            vy = dy / dt * 1.25;
+            angularVelocity = (vx * .055) + (dx / dt * .018);
+            lastX = event.clientX;
+            lastY = event.clientY;
+            lastTime = now;
+        }
+        paint();
     });
 
-    const resetTilt = () => {
-        touching = false;
-        pointerX = 0;
-        pointerY = 0;
-        if (!frame) frame = requestAnimationFrame(paint);
+    const animateSpring = (time) => {
+        const dt = Math.min(.032, (time - (previousFrame || time)) / 1000);
+        previousFrame = time;
+
+        if (!dragging) {
+            const spring = 28;
+            const damping = 5.2;
+            vx += (-spring * x - damping * vx) * dt;
+            vy += (-spring * y - damping * vy) * dt;
+            angularVelocity += (-35 * angle - 5 * angularVelocity + vx * .045) * dt;
+            x += vx * dt;
+            y += vy * dt;
+            angle += angularVelocity * dt;
+            tiltX *= Math.pow(.025, dt);
+            tiltY *= Math.pow(.025, dt);
+            paint();
+        }
+
+        const moving = dragging || Math.abs(x) > .08 || Math.abs(y) > .08 || Math.abs(angle) > .05 || Math.abs(vx) > .3 || Math.abs(vy) > .3;
+        frame = moving ? requestAnimationFrame(animateSpring) : null;
     };
 
-    scene.addEventListener('pointerup', resetTilt);
-    scene.addEventListener('pointercancel', resetTilt);
+    const release = (event) => {
+        if (!dragging || (event && event.pointerId !== pointerId)) return;
+        dragging = false;
+        pointerId = null;
+        stack.classList.remove('is-dragging');
+        previousFrame = performance.now();
+        if (!frame) frame = requestAnimationFrame(animateSpring);
+    };
 
-    scene.addEventListener('pointerleave', resetTilt);
+    scene.addEventListener('pointerup', release);
+    scene.addEventListener('pointercancel', release);
+    scene.addEventListener('pointerleave', (event) => {
+        if (event.pointerType === 'mouse' && dragging) release(event);
+        if (!dragging) { tiltX = 0; tiltY = 0; paint(); }
+    });
 })();
 </script>
 @endsection
