@@ -358,7 +358,7 @@ hr { border-top: var(--line); opacity: 1; }
 .organization-member { display: block; color: var(--ink); text-decoration: none; }
 .organization-member + .organization-member { border-top: 2px dashed var(--ink); padding-top: 1rem; }
 .organization-photo { height: 150px; margin-bottom: .75rem; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #f0f0f0; border-radius: 10px; }
-.organization-photo img { width: 100%; height: 100%; object-fit: contain; object-position: center; }
+.organization-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .organization-photo i { font-size: 3rem; }
 .member-detail-cue { display: flex; align-items: center; justify-content: center; gap: .55rem; margin-top: 1rem; color: var(--blue); font-weight: 900; }
 .member-detail-cue i { transition: transform .18s ease; }
