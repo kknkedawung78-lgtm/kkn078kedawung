@@ -14,64 +14,66 @@
         <div class="member-detail-layout">
         <div class="member-id-column">
         <div class="member-id-scene" data-id-scene>
-            <div class="lanyard" aria-hidden="true">
-                <div class="lanyard-strap"></div>
-                <div class="lanyard-ring"></div>
-                <div class="lanyard-clip"></div>
-            </div>
+            <div class="member-id-rig">
+                <div class="lanyard" aria-hidden="true">
+                    <div class="lanyard-strap"></div>
+                    <div class="lanyard-ring"></div>
+                    <div class="lanyard-clip"></div>
+                </div>
 
-            <div class="member-id-stack">
-                <div class="id-layer id-layer-blue" data-id-layer aria-hidden="true"></div>
-                <div class="id-layer id-layer-pink" data-id-layer aria-hidden="true"></div>
+                <div class="member-id-stack">
+                    <div class="id-layer id-layer-blue" data-id-layer aria-hidden="true"></div>
+                    <div class="id-layer id-layer-pink" data-id-layer aria-hidden="true"></div>
 
-                <article class="member-id-card" data-id-card>
-                    <div class="id-card-header">
-                        <span class="id-card-brand">KKN<span>.</span>KARYA</span>
-                        <span class="id-card-year">2026</span>
-                    </div>
+                    <article class="member-id-card" data-id-card>
+                        <div class="id-card-header">
+                            <span class="id-card-brand">KKN<span>.</span>KARYA</span>
+                            <span class="id-card-year">2026</span>
+                        </div>
 
-                    <div class="id-photo-wrap">
-                        @if($member['photo_url'] ?? false)
-                            <img src="{{ $member['photo_url'] }}" alt="Foto {{ $member['name'] ?? 'anggota' }}" decoding="async">
-                        @else
-                            <div class="id-photo-placeholder"><i class="fa-solid fa-user"></i></div>
-                        @endif
-                        <span class="id-position">{{ $member['position'] ?? 'Anggota' }}</span>
-                    </div>
+                        <div class="id-photo-wrap">
+                            @if($member['photo_url'] ?? false)
+                                <img src="{{ $member['photo_url'] }}" alt="Foto {{ $member['name'] ?? 'anggota' }}" decoding="async">
+                            @else
+                                <div class="id-photo-placeholder"><i class="fa-solid fa-user"></i></div>
+                            @endif
+                            <span class="id-position">{{ $member['position'] ?? 'Anggota' }}</span>
+                        </div>
 
-                    <div class="id-card-body">
-                        <p class="id-label">Nama anggota</p>
-                        <h2>{{ $member['name'] ?? 'Anggota KKN' }}</h2>
+                        <div class="id-card-body">
+                            <p class="id-label">Nama anggota</p>
+                            <h2>{{ $member['name'] ?? 'Anggota KKN' }}</h2>
 
-                        <div class="id-info-grid">
-                            <div>
-                                <span>NIM</span>
-                                <strong>{{ $member['nim'] ?? '-' }}</strong>
+                            <div class="id-info-grid">
+                                <div>
+                                    <span>NIM</span>
+                                    <strong>{{ $member['nim'] ?? '-' }}</strong>
+                                </div>
+                                <div>
+                                    <span>Program Studi</span>
+                                    <strong>{{ $member['prodi'] ?? '-' }}</strong>
+                                </div>
                             </div>
-                            <div>
-                                <span>Program Studi</span>
-                                <strong>{{ $member['prodi'] ?? '-' }}</strong>
+
+                            <div class="id-socials">
+                                @if($member['social_media']['instagram'] ?? false)
+                                    <a href="{{ $member['social_media']['instagram'] }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                @endif
+                                @if($member['social_media']['whatsapp'] ?? false)
+                                    <a href="{{ $member['social_media']['whatsapp'] }}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                                @endif
+                                @if($member['social_media']['email'] ?? false)
+                                    <a href="mailto:{{ $member['social_media']['email'] }}" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                                @endif
                             </div>
                         </div>
 
-                        <div class="id-socials">
-                            @if($member['social_media']['instagram'] ?? false)
-                                <a href="{{ $member['social_media']['instagram'] }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                            @endif
-                            @if($member['social_media']['whatsapp'] ?? false)
-                                <a href="{{ $member['social_media']['whatsapp'] }}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                            @endif
-                            @if($member['social_media']['email'] ?? false)
-                                <a href="mailto:{{ $member['social_media']['email'] }}" aria-label="Email"><i class="fas fa-envelope"></i></a>
-                            @endif
+                        <div class="id-card-footer">
+                            <span>Official Member</span>
+                            <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
                         </div>
-                    </div>
-
-                    <div class="id-card-footer">
-                        <span>Official Member</span>
-                        <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-                    </div>
-                </article>
+                    </article>
+                </div>
             </div>
         </div>
         </div>
@@ -146,19 +148,19 @@
 (() => {
     const scene = document.querySelector('[data-id-scene]');
     const card = scene?.querySelector('[data-id-card]');
-    const stack = scene?.querySelector('.member-id-stack');
+    const rig = scene?.querySelector('.member-id-rig');
     const layers = scene ? [...scene.querySelectorAll('[data-id-layer]')] : [];
     const canTilt = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!scene || !card || !stack || !canTilt) return;
+    if (!scene || !card || !rig || !canTilt) return;
 
     let frame = null, dragging = false, pointerId = null;
     let x = 0, y = 0, angle = 0, vx = 0, vy = 0, angularVelocity = 0;
     let tiltX = 0, tiltY = 0, lastX = 0, lastY = 0, lastTime = 0, previousFrame = 0;
 
-    stack.classList.add('is-physics-ready');
+    rig.classList.add('is-physics-ready');
 
     const paint = () => {
-        stack.style.transform = `translate3d(calc(-50% + ${x}px), ${y}px, 0) rotate(${angle}deg)`;
+        rig.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}deg)`;
         card.style.transform = `rotateX(${-tiltY * 13}deg) rotateY(${tiltX * 17}deg) translateZ(32px)`;
         layers[0]?.style.setProperty('transform', `translate3d(${-14 - tiltX * 18}px, ${9 - tiltY * 12}px, -35px) rotate(${-6 - angle * .08}deg)`);
         layers[1]?.style.setProperty('transform', `translate3d(${15 + tiltX * 15}px, ${8 + tiltY * 10}px, -18px) rotate(${5 + angle * .08}deg)`);
@@ -172,7 +174,7 @@
         lastY = event.clientY;
         lastTime = performance.now();
         vx = vy = angularVelocity = 0;
-        stack.classList.add('is-dragging');
+        rig.classList.add('is-dragging');
         scene.setPointerCapture(event.pointerId);
         event.preventDefault();
     });
@@ -226,7 +228,7 @@
         if (!dragging || (event && event.pointerId !== pointerId)) return;
         dragging = false;
         pointerId = null;
-        stack.classList.remove('is-dragging');
+        rig.classList.remove('is-dragging');
         previousFrame = performance.now();
         if (!frame) frame = requestAnimationFrame(animateSpring);
     };
