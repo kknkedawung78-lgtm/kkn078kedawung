@@ -31,7 +31,7 @@
         <div class="row g-3 page-card-rail gallery-card-rail" id="gallery-grid">
             @forelse($galleries as $gallery)
             <div class="col-md-6 col-lg-4 gallery-item page-card-item" data-category="{{ $gallery['category'] ?? 'dokumentasi' }}">
-                <div class="position-relative overflow-hidden rounded-3 gallery-card-media" style="height: 300px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#galleryModal{{ $loop->index }}">
+                <button type="button" class="position-relative overflow-hidden rounded-3 gallery-card-media gallery-card-button" data-bs-toggle="modal" data-bs-target="#galleryModal{{ $loop->index }}" aria-label="Buka galeri {{ $gallery['title'] ?? 'Dokumentasi' }}">
                     @if($gallery['image_url'] ?? false)
                     <img src="{{ $gallery['image_url'] }}" alt="{{ $gallery['title'] }}" class="img-fluid w-100 h-100" style="object-fit: cover;" loading="lazy" decoding="async">
                     @else
@@ -42,28 +42,10 @@
                     <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center" style="opacity: 0; transition: opacity 0.3s ease;">
                         <i class="fas fa-search text-white" style="font-size: 2rem;"></i>
                     </div>
-                    <span class="position-absolute top-2 end-2 badge bg-primary">{{ $gallery['category'] ?? 'Dokumentasi' }}</span>
-                </div>
+                    <span class="position-absolute top-0 end-0 m-2 badge bg-primary">{{ $gallery['category'] ?? 'Dokumentasi' }}</span>
+                </button>
                 <h6 class="mt-3 mb-1">{{ $gallery['title'] ?? 'Foto' }}</h6>
                 <p class="text-muted small">{{ $gallery['description'] ?? '-' }}</p>
-            </div>
-
-            <!-- Modal for each gallery item -->
-            <div class="modal fade" id="galleryModal{{ $loop->index }}" tabindex="-1">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">{{ $gallery['title'] ?? 'Dokumentasi' }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body text-center">
-                            @if($gallery['image_url'] ?? false)
-                            <img src="{{ $gallery['image_url'] }}" alt="{{ $gallery['title'] }}" class="img-fluid rounded" loading="lazy" decoding="async">
-                            @endif
-                            <p class="mt-3 text-muted">{{ $gallery['description'] ?? '-' }}</p>
-                        </div>
-                    </div>
-                </div>
             </div>
             @empty
             <div class="col-12">
@@ -75,6 +57,26 @@
         </div>
     </div>
 </section>
+
+@foreach($galleries as $gallery)
+<!-- Modal for each gallery item -->
+<div class="modal fade gallery-modal" id="galleryModal{{ $loop->index }}" tabindex="-1" aria-labelledby="galleryModalTitle{{ $loop->index }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="galleryModalTitle{{ $loop->index }}">{{ $gallery['title'] ?? 'Dokumentasi' }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body text-center">
+                @if($gallery['image_url'] ?? false)
+                <img src="{{ $gallery['image_url'] }}" alt="{{ $gallery['title'] ?? 'Dokumentasi' }}" class="gallery-modal-image" loading="lazy" decoding="async">
+                @endif
+                <p class="mt-3 text-muted">{{ $gallery['description'] ?? '-' }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 
 <!-- Back to Home -->
 <section class="py-4 bg-light text-center">

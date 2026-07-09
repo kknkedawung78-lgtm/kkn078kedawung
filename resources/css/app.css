@@ -446,7 +446,10 @@ form:not([style*='display: inline']) .btn[type='submit'] { margin-top: .5rem; }
 .pagination .active > .page-link { background: var(--pink); border-color: var(--ink); }
 
 /* Gallery/modal/timeline */
-.gallery-item > .position-relative { border: var(--line); border-radius: var(--radius) !important; box-shadow: var(--shadow); }
+.gallery-card-button { display: block; width: 100%; height: 300px; padding: 0; color: inherit; background: transparent; border: var(--line); border-radius: var(--radius) !important; box-shadow: var(--shadow); cursor: pointer; }
+.gallery-card-button:focus-visible { outline: 4px solid var(--yellow); outline-offset: 4px; }
+.gallery-card-button:hover > .bg-opacity-50, .gallery-card-button:focus-visible > .bg-opacity-50 { opacity: 1 !important; }
+.gallery-modal-image { display: block; width: auto; max-width: 100%; max-height: min(72vh, 720px); margin-inline: auto; border: 2px solid var(--ink); border-radius: 8px; object-fit: contain; }
 .modal-content { background: var(--paper); border: var(--line); border-radius: var(--radius); box-shadow: 12px 12px 0 var(--ink); }
 .modal-header { border-bottom: var(--line); }
 .btn-close { padding: .75rem; background-color: var(--red); border: 2px solid var(--ink); border-radius: 50%; opacity: 1; }
