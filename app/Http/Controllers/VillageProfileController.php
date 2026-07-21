@@ -48,6 +48,7 @@ class VillageProfileController extends Controller
             'contact_phone' => 'nullable|string',
             'contact_email' => 'nullable|email',
             'contact_address' => 'nullable|string',
+            'map_url' => 'nullable|url',
         ]);
 
         try {
@@ -65,6 +66,7 @@ class VillageProfileController extends Controller
                 'contact_phone' => $validated['contact_phone'] ?? '',
                 'contact_email' => $validated['contact_email'] ?? '',
                 'contact_address' => $validated['contact_address'] ?? '',
+                'map_url' => $validated['map_url'] ?? '',
             ];
 
             $this->firebase->setDocument('village_profile', $id, $data, true);

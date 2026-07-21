@@ -3,6 +3,11 @@
 @section('title', 'Profil Desa')
 
 @section('content')
+@php
+    $defaultMapUrl = 'https://www.google.com/maps?q=Desa%20Kedawung%2C%20Kecamatan%20Susukan%2C%20Kabupaten%20Banjarnegara&output=embed';
+    $villageMapUrl = !empty($village['map_url']) ? $village['map_url'] : $defaultMapUrl;
+@endphp
+
 <!-- Hero Section -->
 <section class="hero">
     <div class="container">
@@ -67,16 +72,22 @@
             </div>
 
             <div class="col-lg-4">
-                @if($village['map_url'] ?? false)
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white">
                         <h5 class="mb-0">Lokasi Desa</h5>
                     </div>
                     <div class="card-body p-0">
-                        <iframe width="100%" height="300" src="{{ $village['map_url'] }}" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        <iframe
+                            width="100%"
+                            height="300"
+                            src="{{ $villageMapUrl }}"
+                            title="Peta Desa Kedawung, Kecamatan Susukan, Kabupaten Banjarnegara"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
-                @endif
 
                 @if($village['image_url'] ?? false)
                 <div class="card mb-4">

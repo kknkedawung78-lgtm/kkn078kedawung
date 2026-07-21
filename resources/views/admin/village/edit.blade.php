@@ -113,6 +113,18 @@
                                 <input type="text" class="form-control" id="contact_address" name="contact_address" value="{{ old('contact_address', $village['contact_address'] ?? '') }}">
                             </div>
 
+                            <div class="mb-3">
+                                <label for="map_url" class="form-label">Google Maps Embed URL</label>
+                                <input
+                                    type="url"
+                                    class="form-control"
+                                    id="map_url"
+                                    name="map_url"
+                                    placeholder="https://www.google.com/maps?q=Desa%20Kedawung%2C%20Kecamatan%20Susukan%2C%20Kabupaten%20Banjarnegara&output=embed"
+                                    value="{{ old('map_url', $village['map_url'] ?? '') }}">
+                                <div class="form-text">Kosongkan untuk memakai peta default Desa Kedawung, Kecamatan Susukan, Kabupaten Banjarnegara.</div>
+                            </div>
+
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary">Batal</a>
                                 <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
