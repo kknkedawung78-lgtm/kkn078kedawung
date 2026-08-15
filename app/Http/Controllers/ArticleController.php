@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\FirebaseService;
+use App\Services\ImageCompressorService;
 use App\Services\MediaStorageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,10 +15,13 @@ class ArticleController extends Controller
 
     protected MediaStorageService $mediaStorage;
 
-    public function __construct(FirebaseService $firebase, MediaStorageService $mediaStorage)
+    protected ImageCompressorService $compressor;
+
+    public function __construct(FirebaseService $firebase, MediaStorageService $mediaStorage, ImageCompressorService $compressor)
     {
         $this->firebase = $firebase;
         $this->mediaStorage = $mediaStorage;
+        $this->compressor = $compressor;
     }
 
     /**
@@ -48,7 +52,7 @@ class ArticleController extends Controller
             'content' => 'required|string',
             'category' => 'required|string',
             'author' => 'required|string',
-            'thumbnail' => 'nullable|image|max:14336',
+            'thumbnail' => 'nullable|image',
         ]);
 
         $storedUpload = null;
@@ -105,7 +109,7 @@ class ArticleController extends Controller
             'content' => 'required|string',
             'category' => 'required|string',
             'author' => 'required|string',
-            'thumbnail' => 'nullable|image|max:14336',
+            'thumbnail' => 'nullable|image',
         ]);
 
         $article = $this->firebase->getDocument('articles', $id);
@@ -177,7 +181,7 @@ class ArticleController extends Controller
 
     private function storeThumbnail(Request $request): array
     {
-        $file = $request->file('thumbnail');
+        $file = $this->compressor->compress($request->file('thumbnail'));
 
         return $this->mediaStorage->uploadPublicFile($file, 'articles', 'article');
     }

@@ -50,7 +50,7 @@
                             <div class="mb-3">
                                 <label for="thumbnail" class="form-label">Thumbnail Program</label>
                                 <input type="file" class="form-control @error('thumbnail') is-invalid @enderror" id="thumbnail" name="thumbnail" accept="image/*">
-                                <small class="text-muted">JPG, PNG, GIF, atau WebP. Maksimal 14 MB.</small>
+                                <small class="text-muted">JPG, PNG, GIF, atau WebP. Foto akan otomatis dikompres.</small>
                                 @error('thumbnail')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

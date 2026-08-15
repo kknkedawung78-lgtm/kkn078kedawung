@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\FirebaseService;
+use App\Services\ImageCompressorService;
 use App\Services\MediaStorageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,10 +15,13 @@ class GalleryController extends Controller
 
     protected MediaStorageService $mediaStorage;
 
-    public function __construct(FirebaseService $firebase, MediaStorageService $mediaStorage)
+    protected ImageCompressorService $compressor;
+
+    public function __construct(FirebaseService $firebase, MediaStorageService $mediaStorage, ImageCompressorService $compressor)
     {
         $this->firebase = $firebase;
         $this->mediaStorage = $mediaStorage;
+        $this->compressor = $compressor;
     }
 
     /**
@@ -58,13 +62,13 @@ class GalleryController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'category' => 'required|in:edukasi,sosialisasi,gotong-royong,dokumentasi,penutupan',
-            'image' => 'required|image|max:14336',
+            'image' => 'required|image',
         ]);
 
         $storedUpload = null;
 
         try {
-            $file = $request->file('image');
+            $file = $this->compressor->compress($request->file('image'));
             $storedUpload = $this->mediaStorage->uploadPublicFile($file, 'galleries', 'gallery');
 
             $data = [
@@ -99,7 +103,7 @@ class GalleryController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'category' => 'required|in:edukasi,sosialisasi,gotong-royong,dokumentasi,penutupan',
-            'image' => 'nullable|image|max:14336',
+            'image' => 'nullable|image',
         ]);
 
         $newUpload = null;
@@ -116,7 +120,7 @@ class GalleryController extends Controller
             ];
 
             if ($request->hasFile('image')) {
-                $file = $request->file('image');
+                $file = $this->compressor->compress($request->file('image'));
                 $newUpload = $this->mediaStorage->uploadPublicFile($file, 'galleries', 'gallery');
                 $data['image_url'] = $newUpload['url'];
                 $data['image_public_id'] = $newUpload['public_id'];

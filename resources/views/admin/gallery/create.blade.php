@@ -55,7 +55,7 @@
                             <div class="mb-3">
                                 <label for="image" class="form-label">Pilih Gambar *</label>
                                 <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
-                                <small class="text-muted">Max 14MB. Format: JPG, PNG, GIF</small>
+                                <small class="text-muted">Format: JPG, PNG, GIF. Foto akan otomatis dikompres.</small>
                             </div>
 
                             <div class="mb-3">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\FirebaseService;
+use App\Services\ImageCompressorService;
 use App\Services\MediaStorageService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,10 +15,13 @@ class GroupProfileController extends Controller
 
     protected MediaStorageService $mediaStorage;
 
-    public function __construct(FirebaseService $firebase, MediaStorageService $mediaStorage)
+    protected ImageCompressorService $compressor;
+
+    public function __construct(FirebaseService $firebase, MediaStorageService $mediaStorage, ImageCompressorService $compressor)
     {
         $this->firebase = $firebase;
         $this->mediaStorage = $mediaStorage;
+        $this->compressor = $compressor;
     }
 
     /**
@@ -50,7 +54,7 @@ class GroupProfileController extends Controller
             'email' => 'nullable|email',
             'instagram' => 'nullable|url',
             'whatsapp' => 'nullable|string',
-            'photo' => 'nullable|image|max:14336',
+            'photo' => 'nullable|image',
         ]);
 
         $storedUpload = null;
@@ -110,7 +114,7 @@ class GroupProfileController extends Controller
             'email' => 'nullable|email',
             'instagram' => 'nullable|url',
             'whatsapp' => 'nullable|string',
-            'photo' => 'nullable|image|max:14336',
+            'photo' => 'nullable|image',
         ]);
 
         $member = $this->firebase->getDocument('members', $id);
@@ -183,7 +187,7 @@ class GroupProfileController extends Controller
 
     private function storePhoto(Request $request): array
     {
-        $file = $request->file('photo');
+        $file = $this->compressor->compress($request->file('photo'));
 
         return $this->mediaStorage->uploadPublicFile($file, 'members', 'member');
     }

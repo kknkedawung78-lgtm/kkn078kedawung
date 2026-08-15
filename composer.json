@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.3",
         "google/cloud-firestore": "^2.1",
+        "intervention/image-laravel": "*",
         "kreait/firebase-php": "^8.2",
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0"

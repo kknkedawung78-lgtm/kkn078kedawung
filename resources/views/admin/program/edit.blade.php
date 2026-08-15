@@ -53,7 +53,7 @@
                                     <img src="{{ $program['thumbnail_url'] }}" alt="Thumbnail {{ $program['title'] ?? 'program' }}" class="admin-program-thumbnail mb-3">
                                 @endif
                                 <input type="file" class="form-control @error('thumbnail') is-invalid @enderror" id="thumbnail" name="thumbnail" accept="image/*">
-                                <small class="text-muted">Kosongkan jika tidak ingin mengganti. Maksimal 14 MB.</small>
+                                <small class="text-muted">Kosongkan jika tidak ingin mengganti. Foto akan otomatis dikompres.</small>
                                 @error('thumbnail')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

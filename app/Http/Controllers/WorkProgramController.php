@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\FirebaseService;
+use App\Services\ImageCompressorService;
 use App\Services\MediaStorageService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,10 +15,13 @@ class WorkProgramController extends Controller
 
     protected MediaStorageService $mediaStorage;
 
-    public function __construct(FirebaseService $firebase, MediaStorageService $mediaStorage)
+    protected ImageCompressorService $compressor;
+
+    public function __construct(FirebaseService $firebase, MediaStorageService $mediaStorage, ImageCompressorService $compressor)
     {
         $this->firebase = $firebase;
         $this->mediaStorage = $mediaStorage;
+        $this->compressor = $compressor;
     }
 
     /**
@@ -49,7 +53,7 @@ class WorkProgramController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'status' => 'required|in:planned,ongoing,completed',
-            'thumbnail' => 'nullable|image|max:14336',
+            'thumbnail' => 'nullable|image',
         ]);
 
         $storedUpload = null;
@@ -107,7 +111,7 @@ class WorkProgramController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'status' => 'required|in:planned,ongoing,completed',
-            'thumbnail' => 'nullable|image|max:14336',
+            'thumbnail' => 'nullable|image',
         ]);
 
         $program = $this->firebase->getDocument('work_programs', $id);
@@ -178,7 +182,7 @@ class WorkProgramController extends Controller
 
     private function storeThumbnail(Request $request): array
     {
-        $file = $request->file('thumbnail');
+        $file = $this->compressor->compress($request->file('thumbnail'));
 
         return $this->mediaStorage->uploadPublicFile($file, 'programs', 'program');
     }
