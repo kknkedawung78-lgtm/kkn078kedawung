@@ -77,7 +77,7 @@
                                 <label for="thumbnail" class="form-label">Thumbnail (Opsional)</label>
                                 <input type="file" class="form-control @error('thumbnail') is-invalid @enderror" 
                                        id="thumbnail" name="thumbnail" accept="image/*">
-                                <small class="text-muted">Max 2MB. Format: JPG, PNG, GIF</small>
+                                <small class="text-muted">Max 14MB. Format: JPG, PNG, GIF</small>
                                 @error('thumbnail')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror

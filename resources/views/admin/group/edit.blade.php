@@ -63,7 +63,7 @@
                                     </div>
                                 @endif
                                 <input type="file" class="form-control" id="photo" name="photo" accept="image/jpeg,image/png,image/webp">
-                                <small class="text-muted">Kosongkan jika tidak ingin mengganti foto. Maksimal 2 MB.</small>
+                                <small class="text-muted">Kosongkan jika tidak ingin mengganti foto. Maksimal 14 MB.</small>
                             </div>
 
                             <hr class="my-4">

@@ -50,7 +50,7 @@ class GroupProfileController extends Controller
             'email' => 'nullable|email',
             'instagram' => 'nullable|url',
             'whatsapp' => 'nullable|string',
-            'photo' => 'nullable|image|max:2048',
+            'photo' => 'nullable|image|max:14336',
         ]);
 
         $storedUpload = null;
@@ -110,7 +110,7 @@ class GroupProfileController extends Controller
             'email' => 'nullable|email',
             'instagram' => 'nullable|url',
             'whatsapp' => 'nullable|string',
-            'photo' => 'nullable|image|max:2048',
+            'photo' => 'nullable|image|max:14336',
         ]);
 
         $member = $this->firebase->getDocument('members', $id);

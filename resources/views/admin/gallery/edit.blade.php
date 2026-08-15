@@ -72,7 +72,7 @@
                             <div class="mb-3">
                                 <label for="image" class="form-label">Ganti Gambar</label>
                                 <input type="file" class="form-control" id="image" name="image" accept="image/*">
-                                <small class="text-muted">Kosongkan jika tidak ingin mengganti. Maksimal 5 MB.</small>
+                                <small class="text-muted">Kosongkan jika tidak ingin mengganti. Maksimal 14 MB.</small>
                             </div>
 
                             <div class="mb-3">

@@ -58,7 +58,7 @@ class GalleryController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'category' => 'required|in:edukasi,sosialisasi,gotong-royong,dokumentasi,penutupan',
-            'image' => 'required|image|max:5120',
+            'image' => 'required|image|max:14336',
         ]);
 
         $storedUpload = null;
@@ -99,7 +99,7 @@ class GalleryController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'category' => 'required|in:edukasi,sosialisasi,gotong-royong,dokumentasi,penutupan',
-            'image' => 'nullable|image|max:5120',
+            'image' => 'nullable|image|max:14336',
         ]);
 
         $newUpload = null;

@@ -49,7 +49,7 @@ class WorkProgramController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'status' => 'required|in:planned,ongoing,completed',
-            'thumbnail' => 'nullable|image|max:2048',
+            'thumbnail' => 'nullable|image|max:14336',
         ]);
 
         $storedUpload = null;
@@ -107,7 +107,7 @@ class WorkProgramController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'status' => 'required|in:planned,ongoing,completed',
-            'thumbnail' => 'nullable|image|max:2048',
+            'thumbnail' => 'nullable|image|max:14336',
         ]);
 
         $program = $this->firebase->getDocument('work_programs', $id);

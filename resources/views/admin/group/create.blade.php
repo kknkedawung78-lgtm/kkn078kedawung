@@ -58,7 +58,7 @@
                             <div class="mb-4">
                                 <label for="photo" class="form-label">Foto Anggota</label>
                                 <input type="file" class="form-control" id="photo" name="photo" accept="image/jpeg,image/png,image/webp">
-                                <small class="text-muted">JPG, PNG, atau WebP. Maksimal 2 MB.</small>
+                                <small class="text-muted">JPG, PNG, atau WebP. Maksimal 14 MB.</small>
                             </div>
 
                             <hr class="my-4">

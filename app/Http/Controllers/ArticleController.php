@@ -48,7 +48,7 @@ class ArticleController extends Controller
             'content' => 'required|string',
             'category' => 'required|string',
             'author' => 'required|string',
-            'thumbnail' => 'nullable|image|max:2048',
+            'thumbnail' => 'nullable|image|max:14336',
         ]);
 
         $storedUpload = null;
@@ -105,7 +105,7 @@ class ArticleController extends Controller
             'content' => 'required|string',
             'category' => 'required|string',
             'author' => 'required|string',
-            'thumbnail' => 'nullable|image|max:2048',
+            'thumbnail' => 'nullable|image|max:14336',
         ]);
 
         $article = $this->firebase->getDocument('articles', $id);
